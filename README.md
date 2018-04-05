@@ -7,14 +7,18 @@
 
 ## Instructions
 
-The starter project has some HTML and CSS styling to display a static version of the Memory Game project. You'll need to convert this project from a static project to an interactive one. This will require modifying the HTML and CSS files, but primarily the JavaScript file.
+* Steps to get this code up and running.
+1. Clone the respository from github.
+2. Run the index.html in browser.Start playing.
 
-To get started, open `js/app.js` and start building out the app's functionality
+* Softwares needs to be configured or installed already.
+1. Any browser(chrome,safari,IE)
 
-For specific, detailed instructions, look at the project instructions in the [Udacity Classroom](https://classroom.udacity.com/me).
+* How does the Game works.
+There are total 16 cards with matching pairs.Player needs to find all the matching cards as quick as possible to score high.The timer will be displayed to show time taken, counter known as moves shows total moves done to get the right match. Star rating is updated based on succesfulMoves and unsuccesfulMoves.
 
-## Contributing
+Player can reshuffle the cards by clicking on restart button.Quit button will just hide the modal.
 
-This repository is the starter code for _all_ Udacity students. Therefore, we most likely will not accept pull requests.
+This game has been tested on Moto g5+.Not tested on any tablets.
 
-For details, check out [CONTRIBUTING.md](CONTRIBUTING.md).
+If any help required, mail me on kabburebh@gmail.com
