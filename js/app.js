@@ -13,6 +13,7 @@ let unsuccessfulMoves = 0;
 let selectedCardsList = [];
 let movesCounter = 0;
 let isTimerStarted = false;
+let isSetTimeOutCalled = false; //to make the setTimeout synchronous
 
 /*
  * Display the cards on the page
@@ -74,17 +75,19 @@ function stopTimer() {
  *    + if all cards have matched, display a message with the final score (put this functionality in another function that you call from this one)
  */
 function showCard(e) {
-  if (e.target.nodeName === 'LI' && e.target.className !== 'card match') {
+  if (e.target.nodeName === 'LI' && e.target.className !== 'card match' && !isSetTimeOutCalled) {
     e.target.className = e.target.className + ' open show';
     if (selectedCardsList.length === 0) {
       selectedCardsList.push(e.target);
     } else if (selectedCardsList[0].children[0].className === e.target.children[0].className) {
+      isSetTimeOutCalled=true;
       cardsMatched(e);
       succesfulMoves++; //increment the succesfulMoves counter
       if (succesfulMoves === 8) {
         announceWinner();
       }
-    } else /*if (!selectedCardsList[0])*/ {
+    } else {
+      isSetTimeOutCalled=true;
       cardsNotMatched(e);
       unsuccessfulMoves++; //increment the unsuccesfulMoves counter
       if ((unsuccessfulMoves > 10 && succesfulMoves < 4) || (unsuccessfulMoves > 15 && succesfulMoves <= 6)) {
@@ -115,8 +118,10 @@ function cardsMatched(e) {
       selectedCardsList[0].className = 'card match';
       selectedCardsList.length = 0;
       updateMoves();
+      isSetTimeOutCalled=false;
     } else{
       e.target.className = 'card';
+      isSetTimeOutCalled=false;
     }
   }, 1000);
 }
@@ -131,9 +136,11 @@ function cardsNotMatched(e) {
       selectedCardsList[0].className = 'card';
       selectedCardsList.length = 0;
       updateMoves();
+      isSetTimeOutCalled=false;
     }
     else{
       e.target.className = 'card';
+      isSetTimeOutCalled=false;
     }
   }, 1000);
 }
