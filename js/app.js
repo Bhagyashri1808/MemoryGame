@@ -78,27 +78,26 @@ function showCard(e) {
     e.target.className = e.target.className + ' open show';
     if (selectedCardsList.length === 0) {
       selectedCardsList.push(e.target);
-    } else if (selectedCardsList[0]) { //enter only if you have selected two cards.
-      if (selectedCardsList[0].children[0].className === e.target.children[0].className) {
-        cardsMatched(e);
-        succesfulMoves++; //increment the succesfulMoves counter
-        if (succesfulMoves === 8) {
-          announceWinner();
-        }
-      } else {
-        cardsNotMatched(e);
-        unsuccessfulMoves++; //increment the unsuccesfulMoves counter
-        if ((unsuccessfulMoves > 10 && succesfulMoves < 4) || (unsuccessfulMoves > 12 && succesfulMoves < 6)) {
-          updateStarRating();
-        }
+    } else if (selectedCardsList[0].children[0].className === e.target.children[0].className) {
+      cardsMatched(e);
+      succesfulMoves++; //increment the succesfulMoves counter
+      if (succesfulMoves === 8) {
+        announceWinner();
+      }
+    } else /*if (!selectedCardsList[0])*/ {
+      cardsNotMatched(e);
+      unsuccessfulMoves++; //increment the unsuccesfulMoves counter
+      if ((unsuccessfulMoves > 10 && succesfulMoves < 4) || (unsuccessfulMoves > 15 && succesfulMoves <= 6)) {
+        updateStarRating();
       }
     }
-    if (!isTimerStarted) { //start the timer on first click
-      startTimer();
-      isTimerStarted = true; //set this variable to true so that timer will be not be started every click.
-    }
+  }
+  if (!isTimerStarted) { //start the timer on first click
+    startTimer();
+    isTimerStarted = true; //set this variable to true so that timer will be not be started every click.
   }
 }
+
 
 /**
  * @description set up the event listener for a card.
@@ -111,37 +110,45 @@ deck.addEventListener("click", showCard);
  */
 function cardsMatched(e) {
   setTimeout(function() {
-    e.target.className = 'card match';
-    selectedCardsList[0].className = 'card match';
-    selectedCardsList.length = 0;
-    updateMoves();
+    if (selectedCardsList[0]) {
+      e.target.className = 'card match';
+      selectedCardsList[0].className = 'card match';
+      selectedCardsList.length = 0;
+      updateMoves();
+    } else{
+      e.target.className = 'card';
+    }
   }, 1000);
 }
-
 /**
-* @description this function is called when cards cards doesn't Matche.
-* change the class of cards to default class after a second and update the moves
-*/
+ * @description this function is called when cards cards doesn't Matche.
+ * change the class of cards to default class after a second and update the moves
+ */
 function cardsNotMatched(e) {
   setTimeout(function() {
-    e.target.className = 'card';
-    selectedCardsList[0].className = 'card';
-    selectedCardsList.length = 0;
-    updateMoves();
+    if (selectedCardsList[0]) {
+      e.target.className = 'card';
+      selectedCardsList[0].className = 'card';
+      selectedCardsList.length = 0;
+      updateMoves();
+    }
+    else{
+      e.target.className = 'card';
+    }
   }, 1000);
 }
 
 /**
-* @description this function will display total number of moves(succesfulMoves+unsuccesfulMoves)
-*/
+ * @description this function will display total number of moves(succesfulMoves+unsuccesfulMoves)
+ */
 function updateMoves() {
   movesCounter++; //lets you know how many moves have you achieved.
   movesSpan.innerHTML = movesCounter.toString();
 }
 
 /*
-* @description  Show winner snackBar
-*/
+ * @description  Show winner snackBar
+ */
 function myFunction() {
   stopTimer();
   // Get the snackbar DIV
@@ -160,8 +167,8 @@ function myFunction() {
 }
 
 /**
-* @description  hides the modal when quit button is clicked
-*/
+ * @description  hides the modal when quit button is clicked
+ */
 function hideModal() {
   var x = document.getElementById("winnerSnackbar");
   x.className = "snackbar button";
@@ -169,11 +176,12 @@ function hideModal() {
 
 
 /**
-* @description: timer
-*this function uses setInterval method to show the timer.
-*timer runs every second and increments the second
-* */
+ * @description: timer
+ *this function uses setInterval method to show the timer.
+ *timer runs every second and increments the second
+ * */
 let timePassed;
+
 function startTimer() {
   timePassed = setInterval(function() {
     if (second < 10) {
@@ -193,24 +201,24 @@ function startTimer() {
 }
 
 /**
-* @description This function updates the starrating after certain moves
-*/
+ * @description This function updates the starrating after certain moves
+ */
 function updateStarRating() {
-  if (stars.children) {
+  if (stars.children.length>1) { //Player should score atleast one star
     stars.removeChild(stars.children[0]);
   }
 }
 
 /**
-* @description this function gets invoked when user matched all the cards
-*/
+ * @description this function gets invoked when user matched all the cards
+ */
 function announceWinner() {
   myFunction();
 }
 
 /**
-* @description this function resets all the variables,,shuffls the cards
-*/
+ * @description this function resets all the variables,,shuffls the cards
+ */
 function restartGame() {
   shuffleCards();
   hideModal();
@@ -226,8 +234,8 @@ function restartGame() {
 }
 
 /**
-* @description resets the global variables
-*/
+ * @description resets the global variables
+ */
 function clearAllGlobalVars() {
   succesfulMoves = 0;
   unsuccessfulMoves = 0;
@@ -236,3 +244,7 @@ function clearAllGlobalVars() {
   second = 0;
   movesSpan.innerHTML = movesCounter.toString();
 }
+
+document.addEventListener('DOMContentLoaded', function() {
+  restartGame();
+});
