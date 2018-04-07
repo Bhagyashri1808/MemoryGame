@@ -75,24 +75,16 @@ function stopTimer() {
  *    + if all cards have matched, display a message with the final score (put this functionality in another function that you call from this one)
  */
 function showCard(e) {
-  if (e.target.nodeName === 'LI' && e.target.className !== 'card match' && !isSetTimeOutCalled) {
+  if (e.target.nodeName === 'LI' && (e.target.className !== 'card match' && e.target.className !== 'card open show' ) && !isSetTimeOutCalled) {
     e.target.className = e.target.className + ' open show';
     if (selectedCardsList.length === 0) {
       selectedCardsList.push(e.target);
     } else if (selectedCardsList[0].children[0].className === e.target.children[0].className) {
       isSetTimeOutCalled=true;
       cardsMatched(e);
-      succesfulMoves++; //increment the succesfulMoves counter
-      if (succesfulMoves === 8) {
-        announceWinner();
-      }
     } else {
       isSetTimeOutCalled=true;
       cardsNotMatched(e);
-      unsuccessfulMoves++; //increment the unsuccesfulMoves counter
-      if ((unsuccessfulMoves > 10 && succesfulMoves < 4) || (unsuccessfulMoves > 15 && succesfulMoves <= 6)) {
-        updateStarRating();
-      }
     }
   }
   if (!isTimerStarted) { //start the timer on first click
@@ -113,16 +105,20 @@ deck.addEventListener("click", showCard);
  */
 function cardsMatched(e) {
   setTimeout(function() {
-    if (selectedCardsList[0]) {
+    // if (selectedCardsList[0]) {
       e.target.className = 'card match';
       selectedCardsList[0].className = 'card match';
       selectedCardsList.length = 0;
       updateMoves();
+      succesfulMoves++; //increment the succesfulMoves counter
+      if (succesfulMoves === 8) {
+       announceWinner();
+     }
       isSetTimeOutCalled=false;
-    } else{
-      e.target.className = 'card';
-      isSetTimeOutCalled=false;
-    }
+    // } else{
+    //   e.target.className = 'card';
+    //   isSetTimeOutCalled=false;
+    // }
   }, 1000);
 }
 /**
@@ -131,17 +127,21 @@ function cardsMatched(e) {
  */
 function cardsNotMatched(e) {
   setTimeout(function() {
-    if (selectedCardsList[0]) {
+    // if (selectedCardsList[0]) {
       e.target.className = 'card';
       selectedCardsList[0].className = 'card';
       selectedCardsList.length = 0;
       updateMoves();
       isSetTimeOutCalled=false;
-    }
-    else{
-      e.target.className = 'card';
-      isSetTimeOutCalled=false;
-    }
+      unsuccessfulMoves++; //increment the unsuccesfulMoves counter
+      if ((unsuccessfulMoves > 10 && succesfulMoves < 4) || (unsuccessfulMoves > 15 && succesfulMoves <= 6)) {
+        updateStarRating();
+      }
+    // }
+    // else{
+    //   e.target.className = 'card';
+    //   isSetTimeOutCalled=false;
+    // }
   }, 1000);
 }
 
